@@ -1,13 +1,11 @@
 package com.apt.aptservice;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +36,27 @@ public class ApartmentMaintenanceCalculator {
         List<BankTransaction> transactions = constructBankTransactions();
         List<MaintenanceReport> reports = generateMaintenanceReport(transactions);
         reports.forEach(report -> System.out.println(report));
+//        generateMaintenanceReportFile(reports);
+    }
+
+    private void generateMaintenanceReportFile(List<MaintenanceReport> reports) {
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("Maintenance Report");
+        int index = 0;
+        for (MaintenanceReport report : reports) {
+            Row row = sheet.createRow(index++);
+            Cell cellFlat = row.createCell(0);
+            cellFlat.setCellValue(report.getFlat());
+            Cell cellPaidDate = row.createCell(1);
+            cellPaidDate.setCellValue(report.getPaidDate());
+            Cell cellAmount = row.createCell(2);
+            cellAmount.setCellValue(report.getAmount());
+        }
+        try(FileOutputStream fileOutputStream = new FileOutputStream("banktransaction_result.xls")) {
+            workbook.write(fileOutputStream);
+        }catch (Exception e){
+            System.out.println("Error while generating file");
+        }
     }
 
     private List<MaintenanceReport> generateMaintenanceReport(List<BankTransaction> transactions) {
@@ -57,15 +76,15 @@ public class ApartmentMaintenanceCalculator {
             }
         });
         reports.sort((MaintenanceReport mr1, MaintenanceReport mr2) -> {
-            /*if (mr1.getFlat().startsWith("G") && mr2.getFlat().startsWith("G"))
+            if (mr1.getFlat().startsWith("G") && mr2.getFlat().startsWith("G"))
                 return mr1.getFlat().compareTo(mr2.getFlat());
             else if (mr1.getFlat().startsWith("G"))
                 return 0;
             else if (mr2.getFlat().startsWith("G"))
                 return 1;
             else
-                return mr1.getFlat().compareTo(mr2.getFlat());*/
-            return mr1.getFlat().compareTo(mr2.getFlat());
+                return mr1.getFlat().compareTo(mr2.getFlat());
+//            return mr1.getFlat().compareTo(mr2.getFlat());
         });
         return reports;
     }
