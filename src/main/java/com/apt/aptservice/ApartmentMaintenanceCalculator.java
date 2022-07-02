@@ -76,15 +76,10 @@ public class ApartmentMaintenanceCalculator {
             }
         });
         reports.sort((MaintenanceReport mr1, MaintenanceReport mr2) -> {
-            if (mr1.getFlat().startsWith("G") && mr2.getFlat().startsWith("G"))
-                return mr1.getFlat().compareTo(mr2.getFlat());
-            else if (mr1.getFlat().startsWith("G"))
-                return 0;
-            else if (mr2.getFlat().startsWith("G"))
-                return 1;
+            if ((mr1.getFlat().startsWith("G") && !mr2.getFlat().startsWith("G")) || (!mr1.getFlat().startsWith("G") && mr2.getFlat().startsWith("G")))
+                return mr2.getFlat().compareTo(mr1.getFlat());
             else
                 return mr1.getFlat().compareTo(mr2.getFlat());
-//            return mr1.getFlat().compareTo(mr2.getFlat());
         });
         return reports;
     }

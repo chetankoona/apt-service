@@ -2,6 +2,15 @@ package com.apt.aptservice;
 
 public class Sample {
     public static void main(String[] args) {
+//        printKeyStringFromRemarks();
+        runSample();
+    }
+
+    private static void runSample() {
+
+    }
+
+    private static void printKeyStringFromRemarks() {
         String str = "eTXN/By:207310100004322/Anil\\110\\2022";
         String value = null;
         if (str.startsWith("UPI")){
