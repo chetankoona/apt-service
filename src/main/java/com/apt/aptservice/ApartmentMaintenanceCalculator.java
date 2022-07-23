@@ -36,7 +36,7 @@ public class ApartmentMaintenanceCalculator {
         List<BankTransaction> transactions = constructBankTransactions();
         List<MaintenanceReport> reports = generateMaintenanceReport(transactions);
         reports.forEach(report -> System.out.println(report));
-//        generateMaintenanceReportFile(reports);
+        generateMaintenanceReportFile(reports);
     }
 
     private void generateMaintenanceReportFile(List<MaintenanceReport> reports) {
