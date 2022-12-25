@@ -6,10 +6,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ApartmentMaintenanceCalculator {
 
@@ -46,6 +43,8 @@ public class ApartmentMaintenanceCalculator {
         for (MaintenanceReport report : reports) {
             Row row = sheet.createRow(index++);
             Cell cellFlat = row.createCell(0);
+            cellFlat.getCellStyle().setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+            cellFlat.getCellStyle().setFillPattern(FillPatternType.SOLID_FOREGROUND);
             cellFlat.setCellValue(report.getFlat());
             Cell cellPaidDate = row.createCell(1);
             cellPaidDate.setCellValue(report.getPaidDate());
@@ -73,6 +72,12 @@ public class ApartmentMaintenanceCalculator {
                 }
             }else {
                 System.out.println("Could not find Key String from Remarks for tran id - "+transaction.getTranid());
+            }
+        });
+        flatKeyStringMap.keySet().forEach(key -> {
+            Optional<MaintenanceReport> reportOptional = reports.stream().filter(report -> key.equalsIgnoreCase(report.getFlat())).findAny();
+            if (reportOptional.isEmpty()){
+                reports.add(new MaintenanceReport(key,"",Double.valueOf(0)));
             }
         });
         reports.sort((MaintenanceReport mr1, MaintenanceReport mr2) -> {
